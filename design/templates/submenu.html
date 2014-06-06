@@ -1,0 +1,7 @@
+<div class="container">
+	<div class="btn-group">
+	{% for name,url in menu_items.items %}
+		<a class="btn btn-default" href="{{url}}">{{name}}</a>
+	{% endfor %}
+	</div>
+</div>

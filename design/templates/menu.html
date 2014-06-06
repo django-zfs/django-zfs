@@ -1,0 +1,5 @@
+<ul class="nav navbar-nav">
+{% for name,url in menu_items.items %}
+	<li><a href="{{url}}">{{ name }}</a></li>
+{% endfor %}
+</ul>

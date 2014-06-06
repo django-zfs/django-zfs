@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Disks - Overview
+{% endblock %}
+
+{% block submenu%}
+	{% load submenurenderer %}
+	{% render_submenu disks %}
+{% endblock %}
+
+{% block main %}
+<div class="panel panel-default">
+<div class="panel-heading">Detected Disks:</div>
+<table class="table">
+<tr>
+	<th>Name</th>
+	<th>Size</th>
+	<th>Readonly</th>
+	<th>Removable</th>
+</th>
+{% for disk in disktable %}
+<tr>
+	<td><div class="btn btn-default btn-sm"><a href="/disks/details/{{ disk.name }}">{{ disk.name }}</a></td>
+	<td>{{ disk.size|filesizeformat }}</td>
+	<td>{{ disk.readonly }}</td>
+	<td>{{ disk.removable }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}

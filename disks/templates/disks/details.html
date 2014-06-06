@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Disks - Details of {{ disk.name }}
+{% endblock %}
+
+{% block submenu%}
+	{% load submenurenderer %}
+	{% render_submenu disks %}
+{% endblock %}
+
+{% block main %}
+<div class="panel panel-default">
+<div class="panel-heading">
+<p>Details of Disk: <strong>{{ disk.name }}</strong></p>
+<p>Free Space: {{ disk.free }}</p>
+<p>Partition Schema: {{disk.type}}</p>
+</div>
+<table class="table table-striped">
+<thead>
+	<th>Name:</th>
+	<th>Size:</th>
+	<th>Filesystem:</th>
+</thead>
+{% for partition in disk.partitions %}
+<tr>
+	<td>{{partition.name}}</td>
+	<td>{{partition.size|filesizeformat }}</td>
+	<td>{{partition.fs_type.title}}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}
