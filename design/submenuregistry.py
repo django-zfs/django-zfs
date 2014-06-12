@@ -1,12 +1,14 @@
+from collections import defaultdict
+
 class SubMenuRegistry():
-	registry = {}
+	registry = defaultdict(list)
 	def __call__(self, app, name, url):
 		def __inner(func):
-			self.registry[app] = {name : url}
+			self.registry[app].append({'name' : name, 'url' : url})
 			return func
 		return __inner
-	def list(self):
-		return self.registry
+	def list(self, appname):
+		return self.registry[appname]
 		
 submenu_registry = SubMenuRegistry()
 

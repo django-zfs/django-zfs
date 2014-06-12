@@ -10,7 +10,52 @@ ZFS - Overview
 {% endblock %}
 
 {% block main %}
-TODO: ZFS Overview
+{% load status_filter %}
+<div class='row'>
+	{% for pool in pools %}
+	<div class='col-md-6'>
+		<div class='panel {{ pool.status|status_filter }}'>
+			<div class='panel-heading'>ZFS Pool: <strong>{{pool.name}}</strong></div>
+			<div class='panel-body'>
+				<div class="row">
+					<div class="col-md-6">
+						<p>
+							<strong>Used: </strong> {{ pool.used|filesizeformat }}
+						</p>
+					</div>
+					<div class="col-md-6">
+						<div class="pull-right">
+							<p>
+								<strong>Size: </strong> {{ pool.size|filesizeformat }}
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="progress">
+					{% widthratio pool.used pool.size 100 as width %}
+					<div class="progress-bar" role="progressbar" aria-valuenow="{{width}}" aria-valuemin="20" aria-valuemax="100" style="width: {% widthratio pool.used pool.size 100 %}%;">
+						{{width}}%
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="text-center">
+							<p>
+								<strong>Available: </strong> {{pool.available|filesizeformat}}
+							</p>
+						</div>
+					</div>
+				</div>
+				<table class="table">
+					<tr><th>Online Devices:</th><td> 6 </td></tr>
+					<tr><th>Offline / Missing Devices:</th><td> 0 </td></tr>
+				</table>
+			</div>
+			
+		</div>
+	</div>
+	{% endfor %}
+</div>
 {% endblock %}
 
 {% block footer %}

@@ -1,8 +1,4 @@
 import subprocess
-from reparted import *
-from celery import shared_task
-
-dev_pattern = ['sd.*', 'mmcblk*', 'vd.*']
 
 def get_block_devices():
 	devices = []
@@ -24,12 +20,4 @@ def get_block_devices():
 	return devices
 
 def get_block_device_details(diskname):
-	disk = Disk(Device("/dev/" + str(diskname)))
-	result = {
-		'name' : disk.device.path,
-		'type' : disk.type_name,
-		'size' : disk.size,
-		'free' : disk.usable_free_space,
-		'partitions' : disk.partitions()
-	}
-	return result
+	return {}

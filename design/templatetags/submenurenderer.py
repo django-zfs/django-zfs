@@ -14,12 +14,12 @@ class SubMenuNode(template.Node):
 	def __init__(self, token):
 		tag_name, app_name = token.split_contents()
 		self.app = app_name
-		self.registry = submenu_registry.list()
+		self.menu = submenu_registry.list(self.app)
 		
 	def render(self, context):
 		tpl = template.loader.get_template('submenu.html')
 		
-		submenu = self.registry.get(self.app, None)
+		submenu = self.menu
 		if not submenu:
 			raise Exception("Cannot render submenu without any items")
 		return tpl.render(template.Context({'menu_items': submenu}))
