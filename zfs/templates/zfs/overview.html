@@ -10,17 +10,19 @@ ZFS - Overview
 {% endblock %}
 
 {% block main %}
-{% load status_filter %}
+{% load zpoolstatusfilter %}
 <div class='row'>
 	{% for pool in pools %}
 	<div class='col-md-6'>
-		<div class='panel {{ pool.status|status_filter }}'>
-			<div class='panel-heading'>ZFS Pool: <strong>{{pool.name}}</strong></div>
+		<div class='panel panel-{{pool.status|zpoolstatus_to_severity}}'>
+			<div class='panel-heading'>
+				<div><strong>{{pool.name}}</strong></div>
+			</div>
 			<div class='panel-body'>
 				<div class="row">
 					<div class="col-md-6">
 						<p>
-							<strong>Used: </strong> {{ pool.used|filesizeformat }}
+							<strong>Allocated: </strong> {{ pool.allocated|filesizeformat }}
 						</p>
 					</div>
 					<div class="col-md-6">
@@ -32,23 +34,31 @@ ZFS - Overview
 					</div>
 				</div>
 				<div class="progress">
-					{% widthratio pool.used pool.size 100 as width %}
-					<div class="progress-bar" role="progressbar" aria-valuenow="{{width}}" aria-valuemin="20" aria-valuemax="100" style="width: {% widthratio pool.used pool.size 100 %}%;">
-						{{width}}%
+					<div class="progress-bar" role="progressbar" aria-valuenow="{{pool.capacity}}" aria-valuemin="20" aria-valuemax="100" style="width: {{pool.capacity}}%;">
+						{{pool.capacity}}%
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-12">
 						<div class="text-center">
 							<p>
-								<strong>Available: </strong> {{pool.available|filesizeformat}}
+								<strong>Free: </strong> {{pool.free|filesizeformat}}
 							</p>
 						</div>
 					</div>
 				</div>
-				<table class="table">
-					<tr><th>Online Devices:</th><td> 6 </td></tr>
-					<tr><th>Offline / Missing Devices:</th><td> 0 </td></tr>
+				<table class="table table-condensed">
+					<tr><th>Status:</th><td>{{pool.status|zpoolstatus_to_string}}</td></tr>
+					<tr><th>State:</th><td>{{pool.state|zpoolstate_to_string}}</td></tr>					
+					<tr><th>Dedup Ratio:</th><td>{{pool.dedupratio}}</td></tr>
+					<tr><th colspan="2"><br>VDEV's:</th></tr>
+					{% for child in pool.config.children %}
+						<tr><th colspan=2>&nbsp;</th></tr>
+						<tr><th><strong>{{child.type}}</strong></th><td>{% if child.is_log %}<strong>ZFS Intent Log (SLOG)</strong>{% else %}&nbsp;{% endif %}</td></tr>
+						{% for sub_child in child.children %}
+							<tr><th style="text-align: right"><span class="glyphicon glyphicon-hdd"></span></th><td> {{sub_child.path}} ({{sub_child.type}})</td></tr>
+						{% endfor %}
+					{% endfor %}
 				</table>
 			</div>
 			
